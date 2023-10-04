@@ -1,0 +1,96 @@
+
+
+
+
+Add a new layout file called activity_main.xml to the res/layout directory.
+Add three buttons to the activity_main.xml layout file: one for starting the stopwatch, one for stopping the stopwatch, and one for pausing the stopwatch.
+Create a new activity class called MainActivity.java and add it to the src/main/java directory.
+Add the following code to the MainActivity.java class:
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private TextView stopwatchTextView;
+    private Button startButton;
+    private Button stopButton;
+    private Button pauseButton;
+
+    private long startTime;
+    private long elapsedTime;
+    private boolean isRunning;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        stopwatchTextView = findViewById(R.id.stopwatchTextView);
+        startButton = findViewById(R.id.startButton);
+        stopButton = findViewById(R.id.stopButton);
+        pauseButton = findViewById(R.id.pauseButton);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTime = System.currentTimeMillis();
+                isRunning = true;
+                startTimer();
+            }
+        });
+
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isRunning = false;
+                stopTimer();
+            }
+        });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRunning) {
+                    isRunning = false;
+                    stopTimer();
+                } else {
+                    isRunning = true;
+                    startTimer();
+                }
+            }
+        });
+    }
+
+    private void startTimer() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isRunning) {
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                    stopwatchTextView.setText(formatTime(elapsedTime));
+                    startTimer();
+                }
+            }
+        }, 10);
+    }
+
+    private void stopTimer() {
+        elapsedTime = System.currentTimeMillis() - startTime;
+        stopwatchTextView.setText(formatTime(elapsedTime));
+    }
+
+    private String formatTime(long elapsedTime) {
+        long seconds = elapsedTime / 1000;
+        long milliseconds = elapsedTime % 1000;
+
+        return String.format("%d:%d", seconds, milliseconds / 100);
+    }
+}
+
+Add the following code to the res/values/strings.xml file:
+XML
+<string name="app_name">Stopwatch</string>
+<string name="start_button">Start</string>
+<string name="stop_button">Stop</string>
+<string name="pause_button">Pause</string>
+ to your stopwatch project, such as the ability to save lap times or reset the timer to zero.
+
+
